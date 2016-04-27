@@ -1,0 +1,4 @@
+oauth2client
+google-api-python-client==1.5.0
+slacker
+python-dateutil
