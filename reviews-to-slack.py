@@ -15,8 +15,9 @@ import dateutil.parser
 import csv
 
 import settings
+import secrets
 
-slack = Slacker(settings.slackToken)
+slack = Slacker(secrets.slackToken)
 
 def formatMessage(title, text, submitted_at, rating, device, version, url, appName):
     stars = ''
@@ -101,7 +102,7 @@ def downloadReport(bucket, filename, out_file):
 def main():
     for app in settings.apps:
         appFilename = constructFilename(app)
-        downloadReport(settings.googleBucket, appFilename, open(appFilename, 'w'))
+        downloadReport(secrets.googleBucket, appFilename, open(appFilename, 'w'))
         processReviewsFile(appFilename)
 
 if __name__ == '__main__':
