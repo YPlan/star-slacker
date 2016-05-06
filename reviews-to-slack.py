@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 from googleapiclient import discovery
 from googleapiclient import http
+from googleapiclient.errors import HttpError
 from oauth2client.service_account import ServiceAccountCredentials
 
 import dateutil.parser
