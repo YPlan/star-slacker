@@ -50,7 +50,7 @@ def formatMessage(title, text, submitted_at, rating, device, version, url, appNa
 def processReviewsFile(filename):
     with open(filename, 'r') as csvfile:
         decodedCsvFile = csvfile.read().decode('utf-16').encode('utf-8')
-        csvReader = csv.reader(BytesIO(decodedCsvFile), delimiter=',')
+        csvReader = csv.reader(BytesIO(decodedCsvFile), delimiter=b',')
         next(csvReader, None)  # skip the headers
         for row in csvReader:
             submitted_at = row[7]
