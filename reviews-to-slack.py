@@ -99,7 +99,11 @@ def downloadReport(bucket, filename, out_file):
 
     done = False
     while done is False:
-        status, done = downloader.next_chunk()
+        try:
+            status, done = downloader.next_chunk()
+        except HttpError as e:
+            print("Failed to download ", e)
+            return
         print("Download {}%.".format(int(status.progress() * 100)))
 
     return out_file
