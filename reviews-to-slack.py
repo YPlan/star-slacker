@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 from googleapiclient import discovery
 from googleapiclient import http
+from googleapiclient.errors import HttpError
 from oauth2client.service_account import ServiceAccountCredentials
 
 import dateutil.parser
@@ -99,7 +100,11 @@ def downloadReport(bucket, filename, out_file):
 
     done = False
     while done is False:
-        status, done = downloader.next_chunk()
+        try:
+            status, done = downloader.next_chunk()
+        except HttpError as e:
+            print("Failed to download ", e)
+            return
         print("Download {}%.".format(int(status.progress() * 100)))
 
     return out_file
