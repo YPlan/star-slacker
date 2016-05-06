@@ -1,2 +1,3 @@
 Work in progress... 
 
+- Copy settings-sample.py to setting.py and replace the correct values

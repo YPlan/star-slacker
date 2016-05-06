@@ -13,21 +13,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 import dateutil.parser
 import csv
 
-slackToken = 'slack-token-here'
-slackChannel = '#slack-channel-here'
+import settings
 
-# You get this from the Reviews page in the Google Play Console
-googleBucket = 'pubsite_prod_rev_your-bucket-here'
-
-# This is generated in the Admin Console and contains info for Google OAuth
-json_file = 'google-auth.json'
-
-# Our apps
-apps = ["com.yplanapp", "co.cinemaclub", "com.yplanapp.access"]
-daysInPast = 1
-
-slack = Slacker(slackToken)
-
+slack = Slacker(settings.slackToken)
 
 def formatMessage(title, text, submitted_at, rating, device, version, url, appName):
     stars = ''
@@ -55,7 +43,7 @@ def processReviewsFile(filename):
         for row in csvReader:
             submitted_at = row[7]
             # only show reviews from the last 24hrs
-            if (datetime.utcnow() - dateutil.parser.parse(submitted_at, ignoretz='true')) > timedelta(daysInPast):
+            if (datetime.utcnow() - dateutil.parser.parse(submitted_at, ignoretz='true')) > timedelta(settings.daysInPast):
                 continue
             text = row[11]
             title = row[10]
@@ -79,7 +67,7 @@ def create_service():
     # available after running `gcloud init`. When running on compute
     # engine, these are available from the environment.
 
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file, scopes='https://www.googleapis.com/auth/devstorage.read_only')
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(settings.googleCredentials, scopes='https://www.googleapis.com/auth/devstorage.read_only')
     # Construct the service object for interacting with the Cloud Storage API -
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
@@ -110,9 +98,9 @@ def downloadReport(bucket, filename, out_file):
 
 
 def main():
-    for app in apps:
+    for app in settings.apps:
         appFilename = constructFilename(app)
-        downloadReport(googleBucket, appFilename, open(appFilename, 'w'))
+        downloadReport(settings.googleBucket, appFilename, open(appFilename, 'w'))
         processReviewsFile(appFilename)
 
 if __name__ == '__main__':

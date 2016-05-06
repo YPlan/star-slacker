@@ -1,0 +1,8 @@
+# Ignore settings
+settings.py
+
+# Ignore google configs
+google-auth.json
+
+# Ignore any generated csv files
+*.csv
