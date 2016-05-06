@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 from googleapiclient import discovery
 from googleapiclient import http
+from googleapiclient.errors import HttpError
 from oauth2client.service_account import ServiceAccountCredentials
 
 import dateutil.parser
@@ -53,7 +54,7 @@ def processReviewsFile(filename):
             url = row[15]
             version = row[2]
             msg = formatMessage(title, text, submitted_at, rating, device, version, url, appName)
-            slack.chat.post_message(slackChannel, msg)
+            slack.chat.post_message(settings.slackChannel, msg)
 
 
 def constructFilename(appPackage):
