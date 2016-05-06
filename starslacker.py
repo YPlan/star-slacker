@@ -99,11 +99,11 @@ def downloadReport(bucket, filename, out_file):
     return out_file
 
 
-def main():
+def lambda_handler ( event, context ):
     for app in settings.apps:
         appFilename = constructFilename(app)
         downloadReport(secrets.googleBucket, appFilename, open(appFilename, 'w'))
         processReviewsFile(appFilename)
 
 if __name__ == '__main__':
-    main()
+    lambda_handler( "", "" )
