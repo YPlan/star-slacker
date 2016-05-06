@@ -1,11 +1,7 @@
-# Put the slack token here and the slack channel you want to post to
-slackToken = 'slack-token-here'
+# Put the slack channel you want to post to
 slackChannel = '#slack-channel-here'
 
-# You get this from the Reviews page in the Google Play Console
-googleBucket = 'pubsite_prod_rev_your-bucket-here'
-
-# This is generated in the Admin Console and contains info for Google OAuth
+# This file is generated in the Admin Console and contains info for Google OAuth
 googleCredentials = 'google-auth.json'
 
 # Your apps (package names) here

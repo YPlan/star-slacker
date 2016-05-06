@@ -5,6 +5,7 @@ __pycache__/
 
 # Ignore settings
 settings.py
+secrets.py
 
 # Ignore google configs
 google-auth.json
