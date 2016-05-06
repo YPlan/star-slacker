@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore settings
+settings.py
+
+# Ignore google configs
+google-auth.json
+
+# Ignore any generated csv files
+*.csv
