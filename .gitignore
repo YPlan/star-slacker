@@ -12,3 +12,4 @@ google-auth.json
 
 # Ignore any generated csv files
 *.csv
+.DS_Store
