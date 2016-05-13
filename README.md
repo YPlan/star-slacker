@@ -16,5 +16,10 @@ Star Slacker is a simple util for fetching user reviews from the Play Store and 
   * Note: this contains the non-sensitive settings, that can be kept in plaintext 
 * Run the script periodically! 
 
+# How to deploy and run on AWS Lambda 
+
+Coming soon! 
+
+
 # License
 Apache 2.0 - See [LICENSE] for more information.
