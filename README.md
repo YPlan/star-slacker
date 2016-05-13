@@ -1,5 +1,3 @@
-Star Slacker
-
 # Introduction
 
 Star Slacker is a simple util for fetching user reviews from the Play Store and posting these to a Slack channel
