@@ -20,11 +20,26 @@ def lambda_handler(event, context):
     slack = Slacker(secrets.slack_token)
 
     for app in settings.apps:
+        print("Procesing reviews for ", app)
         app_filename = construct_filename(app)
         file_buf = BytesIO()
-        download_report(secrets.google_bucket, app_filename, file_buf)
-        file_buf.seek(0)
-        process_reviews(file_buf, slack)
+        # TODO If today is the 1st of a month, also download previous month and parse both
+        all_reviews = []
+        if download_report(secrets.google_bucket, app_filename, file_buf):
+            print("Downloaded report")
+            file_buf.seek(0)
+            all_reviews.extend(process_reviews(file_buf, slack))
+
+        if not all_reviews:
+            no_new_reviews_message = "No new Play Store reviews or ratings for " + app
+            print(no_new_reviews_message)
+            slack.chat.post_message(settings.slack_channel, no_new_reviews_message)
+        else:
+            print("Posting reviews for " + app)
+            slack.chat.post_message(settings.slack_channel, "New reviews or ratings for " + app)
+            for review in all_reviews:
+                slack.chat.post_message(settings.slack_channel, review)
+        print("\n\n")
 
 
 def construct_filename(app_package):
@@ -40,7 +55,6 @@ def download_report(bucket, filename, out_file):
     # http://g.co/dev/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#get_media
     full_path_filename = 'reviews/' + filename
     req = service.objects().get_media(bucket=bucket, object=full_path_filename)
-
     downloader = http.MediaIoBaseDownload(out_file, req)
 
     done = False
@@ -49,10 +63,10 @@ def download_report(bucket, filename, out_file):
             status, done = downloader.next_chunk()
         except HttpError as e:
             print("Failed to download ", e)
-            return
+            return False
         print("Download {}%.".format(int(status.progress() * 100)))
 
-    return out_file
+    return True
 
 
 def create_service():
@@ -75,7 +89,7 @@ def process_reviews(file_buf, slack):
     decoded_csv_file = file_buf.read().decode('utf-16').encode('utf-8')
     csv_reader = csv.reader(BytesIO(decoded_csv_file), delimiter=b',')
     next(csv_reader, None)  # skip the headers
-
+    all_reviews = []
     for row in csv_reader:
         submitted_at = row[7]
         # only show reviews from the last N hours
@@ -90,8 +104,8 @@ def process_reviews(file_buf, slack):
         text = row[11]
         url = row[15]
         msg = format_message(title, text, submitted_at, rating, device, version, url, app_name)
-
-        slack.chat.post_message(settings.slack_channel, msg)
+        all_reviews.append(msg)
+    return all_reviews
 
 
 def format_message(title, text, submitted_at, rating, device, version, url, app_name):
