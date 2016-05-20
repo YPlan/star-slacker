@@ -18,7 +18,7 @@ import secrets
 
 def lambda_handler(event, context):
     slack = Slacker(secrets.slack_token)
-
+    print("Current time (UTC) is {0}".format(datetime.utcnow()))
     for app in settings.apps:
         print("Procesing reviews for ", app)
         app_filename = construct_filename(app)
@@ -92,8 +92,9 @@ def process_reviews(file_buf, slack):
     all_reviews = []
     for row in csv_reader:
         submitted_at = row[7]
-        # only show reviews from the last N hours
-        if (datetime.utcnow() - dateutil.parser.parse(submitted_at, ignoretz='true')) > timedelta(settings.days_in_past):
+        # only show reviews from the last N days (default is 2)
+        if (datetime.utcnow() - dateutil.parser.parse(submitted_at, ignoretz='true')) > timedelta(days=settings.days_in_past):
+            print("Ignoring review with timestamp " + submitted_at)
             continue
 
         app_name = row[0]

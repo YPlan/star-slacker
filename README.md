@@ -11,9 +11,10 @@ Star Slacker is a simple util for fetching user reviews from the Play Store and 
 
 # Setup
 * Create a `secrets.py` file, using [secrets-sample.py](secrets-sample.py) as example
-  * Note: this contains the sensitive settings, that you probably want to keep encrypted
+  * This contains the sensitive settings, that you probably want to keep encrypted
 * Create a `settings.py` file, using [settings-sample.py](settings-sample.py) as example
-  * Note: this contains the non-sensitive settings, that can be kept in plaintext 
+  * This contains the non-sensitive settings, that can be kept in plaintext 
+  * We recommend that daysInPast >= 2, because reviews don't get placed in the Google Cloud Storage bucket right away (i.e. the most recent reviews you will see are from 2 days ago)
 * Run the script periodically! 
 
 # How to deploy and run on AWS Lambda 
